@@ -8,3 +8,9 @@ tmux pane border customize
 
 
 inspired by https://qiita.com/arks22/items/db8eb6a14223ce29219a
+
+## Install
+
+```sh
+make install
+```
