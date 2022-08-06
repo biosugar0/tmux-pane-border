@@ -3,21 +3,21 @@
 if git_status=$(cd $1 && git --no-optional-locks status 2>/dev/null ); then
   git_branch="$(echo $git_status| awk 'NR==1 {print $3}')"
   case $git_status in
-    *Changes\ not\ staged* ) state="#[bg=colour013,fg=black] ± #[fg=default]" ;;
-    *Changes\ to\ be\ committed* ) state="#[bg=blue,fg=black] + #[default]" ;;
-    * ) state="#[bg=green,fg=black] ✔ #[default]" ;;
+    *Changes\ not\ staged* ) state="#[bg=default,fg=colour013]± #[fg=default]" ;;
+    *Changes\ to\ be\ committed* ) state="#[bg=defalt,fg=blue]+ #[default]" ;;
+    * ) state="#[bg=default,fg=green]✔ #[default]" ;;
   esac
   if [[ $git_branch = "master" ]]; then
-    git_info="#[underscore]#[bg=black,fg=blue] ⭠ ${git_branch} #[default]${state}"
+    git_info="#[bg=default,fg=blue] ⭠ ${git_branch} #[default]${state}"
   else
-    git_info="#[underscore]#[bg=black,fg=colour014] ⭠ ${git_branch} #[default]${state}"
+    git_info="#[bg=default,fg=colour014] ⭠ ${git_branch} #[default]${state}"
   fi
 else
   git_info=""
 fi
 
 current_pwd="${1/$HOME/~}"
-directory="#[underscore]#[bg=black,fg=cyan] *$current_pwd:t#[default]"
+directory="#[bg=default,fg=cyan] *$current_pwd:t#[default]"
 
 if [[ -z "$(which kubectl 2>/dev/null)" ]]; then
     echo "kubectl doesn't exist"
@@ -35,6 +35,10 @@ if [[ -z "${context}" ]]; then
     exit 1
 fi
 
-cluster_name="#[underscore]#[bg=black,fg=cyan][${context:t}]#[default]"
+cluster_name="#[bg=default,fg=cyan][${context:t}]#[default]"
+
+if [[ $cluster_name == *"prd"* ]] then
+    cluster_name="#[bg=red,fg=white][${context:t}]#[default]"
+fi
 
 echo "$cluster_name$directory$git_info"
